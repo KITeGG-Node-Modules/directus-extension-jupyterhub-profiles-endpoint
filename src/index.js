@@ -50,24 +50,20 @@ export default {
 			let allowedProfiles = []
 			const profileList = []
 
-			if (userGroups.includes('staff') || userGroups.includes('management')) {
-				allowedProfiles = profiles.filter(profile => userGroups.includes(profile.slug))
-			} else {
-				const today = DateTime.now().toFormat('yyyy-MM-dd')
-				try {
-					const [profileReservation] = await usersService.knex('gpu_reservations as gr')
-						.select('gr.gpu')
-						.innerJoin('gpu_reservations_directus_users as grdu',
-							'gr.id', '=', 'grdu.gpu_reservations_id')
-						.where('grdu.directus_users_id', user.id)
-						.andWhere('gr.start', '<=', today)
-						.andWhere('gr.end', '>', today)
-					const reservedProfile = profiles.find(profile => profile.slug === profileReservation?.gpu)
-					allowedProfiles = profiles.filter(profile => profile.slug === 'no-gpu')
-					if (reservedProfile) allowedProfiles.push(reservedProfile)
-				} catch (err) {
-					console.error('Failed to fetch reservations:', err.message)
-				}
+			const today = DateTime.now().toFormat('yyyy-MM-dd')
+			try {
+				const [profileReservation] = await usersService.knex('gpu_reservations as gr')
+					.select('gr.gpu')
+					.innerJoin('gpu_reservations_directus_users as grdu',
+						'gr.id', '=', 'grdu.gpu_reservations_id')
+					.where('grdu.directus_users_id', user.id)
+					.andWhere('gr.start', '<=', today)
+					.andWhere('gr.end', '>', today)
+				const reservedProfile = profiles.find(profile => profile.slug === profileReservation?.gpu)
+				allowedProfiles = profiles.filter(profile => profile.slug === 'no-gpu')
+				if (reservedProfile) allowedProfiles.push(reservedProfile)
+			} catch (err) {
+				console.error('Failed to fetch reservations:', err.message)
 			}
 
 			for (const profile of allowedProfiles) {
