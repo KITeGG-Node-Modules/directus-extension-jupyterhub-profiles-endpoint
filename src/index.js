@@ -22,10 +22,10 @@ export default {
 				const token = req.headers['x-authorization'].split(' ').pop()
 				try {
 					const decodedToken = jwtDecode(token)
-					if (decodedToken.exp * 1000 < Date.now()) {
-						res.status(401)
-						return res.send({message: 'api_errors.unauthorized'})
-					}
+					// if (decodedToken.exp * 1000 < Date.now()) {
+					// 	res.status(401)
+					// 	return res.send({message: 'api_errors.unauthorized'})
+					// }
 					const { groups, sub: oidcId } = decodedToken
 					if (Array.isArray(groups) && oidcId) {
 						userGroups = groups.concat(['no-gpu'])
