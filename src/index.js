@@ -54,7 +54,7 @@ export default {
 			try {
 				const courseIds = await usersService.knex('courses as c')
 					.select('c.id')
-					.innerJoin('courses_directus_users cdu', 'c.id', '=', 'cdu.courses_id')
+					.innerJoin('courses_directus_users as cdu', 'c.id', '=', 'cdu.courses_id')
 					.where('cdu.directus_users_id', user.id)
 				const reservations = await usersService.knex('gpu_reservations as gr')
 					.select('gr.gpu')
