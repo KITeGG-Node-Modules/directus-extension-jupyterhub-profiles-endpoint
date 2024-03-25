@@ -52,17 +52,24 @@ export default {
 
 			const today = DateTime.now().toFormat('yyyy-MM-dd')
 			try {
+				const courseIds = await usersService.knex('courses as c')
+					.select('c.id')
+					.innerJoin('courses_directus_users cdu', 'c.id', '=', 'cdu.courses_id')
+					.where('cdu.directus_users_id', user.id)
 				const reservations = await usersService.knex('gpu_reservations as gr')
 					.select('gr.gpu')
 					.innerJoin('gpu_reservations_directus_users as grdu',
 						'gr.id', '=', 'grdu.gpu_reservations_id')
-					.where('grdu.directus_users_id', user.id)
+					.where(function () {
+						this.where('grdu.directus_users_id', user.id)
+							.orWhereIn('gr.course', courseIds)
+					})
 					.andWhere('gr.start', '<=', today)
 					.andWhere('gr.end', '>', today)
 				allowedProfiles = profiles.filter(profile => profile.slug === 'no-gpu')
 				for (const profileReservation of reservations) {
 					const reservedProfile = profiles.find(profile => profile.slug === profileReservation?.gpu)
-					if (reservedProfile) allowedProfiles.push(reservedProfile)
+					if (reservedProfile && !allowedProfiles.includes(reservedProfile)) allowedProfiles.push(reservedProfile)
 				}
 			} catch (err) {
 				console.error('Failed to fetch reservations:', err.message)
