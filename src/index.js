@@ -57,10 +57,7 @@ export default {
 					.select('gr.gpu')
 					.innerJoin('gpu_reservations_directus_users as grdu',
 						'gr.id', '=', 'grdu.gpu_reservations_id')
-					.where(function () {
-						this.where('grdu.directus_users_id', user.id)
-							.orWhereIn('gr.course', courseIdsCollaborators.concat(courseIdsMembers))
-					})
+					.where('grdu.directus_users_id', user.id)
 					.andWhere('gr.start', '<=', today)
 					.andWhere('gr.end', '>', today)
 
