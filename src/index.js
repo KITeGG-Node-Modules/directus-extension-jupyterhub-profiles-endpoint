@@ -74,7 +74,7 @@ export default {
 				console.log('RES CID M:', JSON.stringify(courseIdsMembers))
 				const reservationsCourses = await usersService.knex('gpu_reservations as gr')
 					.select('gr.gpu')
-					.whereIn('gr.course', courseIdsCollaborators.concat(courseIdsMembers))
+					.whereIn('gr.course', courseIdsCollaborators.concat(courseIdsMembers).map(e => e.id))
 					.andWhere('gr.start', '<=', today)
 					.andWhere('gr.end', '>', today)
 				console.log('RES COURSES:', JSON.stringify(reservationsCourses))
