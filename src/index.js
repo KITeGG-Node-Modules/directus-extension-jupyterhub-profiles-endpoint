@@ -81,7 +81,11 @@ export default {
 
 				for (const profileReservation of reservationsUser.concat(reservationsCourses)) {
 					const reservedProfile = profiles.find(profile => profile.slug === profileReservation?.gpu)
-					if (reservedProfile && !allowedProfiles.includes(reservedProfile)) allowedProfiles.push(reservedProfile)
+					if (reservedProfile) {
+						if (!allowedProfiles.find(p => p.slug === reservedProfile.slug)) {
+							allowedProfiles.push(reservedProfile)
+						}
+					}
 				}
 			} catch (err) {
 				console.error('Failed to fetch reservations:', err.message)
