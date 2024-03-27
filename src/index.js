@@ -47,20 +47,13 @@ export default {
 				return res.send({message: 'api_errors.unauthorized'})
 			}
 
-			let allowedProfiles = []
+			const allowedProfiles = profiles.filter(profile => profile.slug === 'no-gpu')
 			const profileList = []
 
 			const today = DateTime.now().toFormat('yyyy-MM-dd')
 			try {
-				const courseIdsCollaborators = await usersService.knex('courses as c')
-					.select('c.id')
-					.innerJoin('courses_directus_users as cdu', 'c.id', '=', 'cdu.courses_id')
-					.where('cdu.directus_users_id', user.id)
-				const courseIdsMembers = await usersService.knex('courses as c')
-					.select('c.id')
-					.innerJoin('courses_directus_users_2 as cdu', 'c.id', '=', 'cdu.courses_id')
-					.where('cdu.directus_users_id', user.id)
-				const reservations = await usersService.knex('gpu_reservations as gr')
+				// FIXME: Optimise this SQL crap
+				const reservationsUser = await usersService.knex('gpu_reservations as gr')
 					.select('gr.gpu')
 					.innerJoin('gpu_reservations_directus_users as grdu',
 						'gr.id', '=', 'grdu.gpu_reservations_id')
@@ -70,8 +63,22 @@ export default {
 					})
 					.andWhere('gr.start', '<=', today)
 					.andWhere('gr.end', '>', today)
-				allowedProfiles = profiles.filter(profile => profile.slug === 'no-gpu')
-				for (const profileReservation of reservations) {
+
+				const courseIdsCollaborators = await usersService.knex('courses as c')
+					.select('c.id')
+					.innerJoin('courses_directus_users as cdu', 'c.id', '=', 'cdu.courses_id')
+					.where('cdu.directus_users_id', user.id)
+				const courseIdsMembers = await usersService.knex('courses as c')
+					.select('c.id')
+					.innerJoin('courses_directus_users_2 as cdu', 'c.id', '=', 'cdu.courses_id')
+					.where('cdu.directus_users_id', user.id)
+				const reservationsCourses = await usersService.knex('gpu_reservations as gr')
+					.select('gr.gpu')
+					.whereIn('gr.course', courseIdsCollaborators.concat(courseIdsMembers))
+					.andWhere('gr.start', '<=', today)
+					.andWhere('gr.end', '>', today)
+
+				for (const profileReservation of reservationsUser.concat(reservationsCourses)) {
 					const reservedProfile = profiles.find(profile => profile.slug === profileReservation?.gpu)
 					if (reservedProfile && !allowedProfiles.includes(reservedProfile)) allowedProfiles.push(reservedProfile)
 				}
