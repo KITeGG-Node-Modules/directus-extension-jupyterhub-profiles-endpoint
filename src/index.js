@@ -52,9 +52,13 @@ export default {
 
 			const today = DateTime.now().toFormat('yyyy-MM-dd')
 			try {
-				const courseIds = await usersService.knex('courses as c')
+				const courseIdsCollaborators = await usersService.knex('courses as c')
 					.select('c.id')
 					.innerJoin('courses_directus_users as cdu', 'c.id', '=', 'cdu.courses_id')
+					.where('cdu.directus_users_id', user.id)
+				const courseIdsMembers = await usersService.knex('courses as c')
+					.select('c.id')
+					.innerJoin('courses_directus_users_2 as cdu', 'c.id', '=', 'cdu.courses_id')
 					.where('cdu.directus_users_id', user.id)
 				const reservations = await usersService.knex('gpu_reservations as gr')
 					.select('gr.gpu')
@@ -62,7 +66,7 @@ export default {
 						'gr.id', '=', 'grdu.gpu_reservations_id')
 					.where(function () {
 						this.where('grdu.directus_users_id', user.id)
-							.orWhereIn('gr.course', courseIds)
+							.orWhereIn('gr.course', courseIdsCollaborators.concat(courseIdsMembers))
 					})
 					.andWhere('gr.start', '<=', today)
 					.andWhere('gr.end', '>', today)
