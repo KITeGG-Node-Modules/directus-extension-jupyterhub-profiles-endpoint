@@ -59,7 +59,7 @@ export default {
 						'gr.id', '=', 'grdu.gpu_reservations_id')
 					.where('grdu.directus_users_id', user.id)
 					.andWhere('gr.start', '<=', today)
-					.andWhere('gr.end', '>', today)
+					.andWhere('gr.end', '>=', today)
 
 				const courseIdsCollaborators = await usersService.knex('courses as c')
 					.select('c.id')
@@ -73,7 +73,7 @@ export default {
 					.select('gr.gpu')
 					.whereIn('gr.course', courseIdsCollaborators.concat(courseIdsMembers).map(e => e.id))
 					.andWhere('gr.start', '<=', today)
-					.andWhere('gr.end', '>', today)
+					.andWhere('gr.end', '>=', today)
 
 				for (const profileReservation of reservationsUser.concat(reservationsCourses)) {
 					const reservedProfile = profiles.find(profile => profile.slug === profileReservation?.gpu)
