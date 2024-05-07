@@ -6,7 +6,7 @@ import { DateTime } from 'luxon'
 export default {
   id: 'jupyter',
   handler: (router, context) => {
-    const {services, logger} = context
+    const {services} = context
     const {UsersService} = services
 
     router.get('/profiles', async (req, res) => {
@@ -108,7 +108,7 @@ export default {
 					if (profile.kubespawner_override?.extra_resource_limits) {
 						choices[key].kubespawner_override.extra_resource_limits = profile.kubespawner_override.extra_resource_limits
 					}
-					if (profile.kubespawner_override?.image) {
+					if (image.kubespawner_override?.image) {
 						choices[key].kubespawner_override.image = image.kubespawner_override.image
 					}
 				}
