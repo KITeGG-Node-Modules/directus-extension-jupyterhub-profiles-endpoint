@@ -56,7 +56,7 @@ export const images = [
       'init_containers': [{
         'image': 'registry.kitegg.de/library/kitegg-base-image:latest',
         'name': 'kitegg-init-container',
-        'command': ['/opt/kitegg-base-image/init-container.sh']
+        'command': ['/opt/kitegg-base-image/init-container.sh', '||', 'true']
       }]
     }
   },
