@@ -52,7 +52,12 @@ export const images = [
     'groups': ['management'],
     'display_name': 'KITeGG Base Image (latest)',
     'kubespawner_override': {
-      'image': 'registry.kitegg.de/library/kitegg-base-image:latest'
+      'image': 'registry.kitegg.de/library/kitegg-base-image:latest',
+      'init_containers': [{
+        'image': 'registry.kitegg.de/library/kitegg-base-image:latest',
+        'name': 'kitegg-init-container',
+        'command': ['/opt/kitegg-base-image/init-container.sh']
+      }]
     }
   },
 ]
