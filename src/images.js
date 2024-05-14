@@ -47,4 +47,12 @@ export const images = [
       'image': 'registry.kitegg.de/library/kitegg-singleuser:kisd-auto-kernels'
     }
   },
+  {
+    'key': 'latest',
+    'groups': ['staff'],
+    'display_name': 'KITeGG Base Image (latest)',
+    'kubespawner_override': {
+      'image': 'registry.kitegg.de/library/kitegg-base-image:latest'
+    }
+  },
 ]
