@@ -49,7 +49,7 @@ export const images = [
   },
   {
     'key': 'latest',
-    'groups': ['staff'],
+    'groups': ['management'],
     'display_name': 'KITeGG Base Image (latest)',
     'kubespawner_override': {
       'image': 'registry.kitegg.de/library/kitegg-base-image:latest'
