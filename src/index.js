@@ -111,6 +111,9 @@ export default {
 					if (image.kubespawner_override?.image) {
 						choices[key].kubespawner_override.image = image.kubespawner_override.image
 					}
+					if (Array.isArray(image.kubespawner_override?.init_containers)) {
+						choices[key].kubespawner_override.init_containers = image.kubespawner_override.init_containers
+					}
 				}
 
 				profileList.push({
