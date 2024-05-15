@@ -106,7 +106,8 @@ export default {
 						}
 					}
 					if (!mayUse) continue
-					const { id: key, display_name, image, kitegg_init_container } = jupyterImage
+					const { id, sort, display_name, image, kitegg_init_container } = jupyterImage
+					const key = `${sort || 0}-${id}`
 					choices[key] = {
 						display_name,
 						kubespawner_override: {}
