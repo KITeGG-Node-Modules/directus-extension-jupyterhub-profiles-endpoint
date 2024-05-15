@@ -1,13 +1,12 @@
 import { jwtDecode } from 'jwt-decode'
 import { profiles } from './profiles.js'
-import { images } from './images.js'
 import { DateTime } from 'luxon'
 
 export default {
   id: 'jupyter',
   handler: (router, context) => {
     const {services} = context
-    const {UsersService} = services
+    const {UsersService, ItemsService} = services
 
     router.get('/profiles', async (req, res) => {
 			if (!req.headers['x-authorization'] && !req.accountability?.user) {
@@ -17,7 +16,8 @@ export default {
 			}
 
 			const usersService = new UsersService({schema: req.schema, accountability: req.accountability})
-			let userGroups, user
+			const jupyterImagesService = new ItemsService('jupyter_images', {schema: req.schema, accountability: req.accountability})
+			let userGroups = [], user
 			if (req.headers['x-authorization']) {
 				const token = req.headers['x-authorization'].split(' ').pop()
 				try {
@@ -87,17 +87,26 @@ export default {
 				console.error('Failed to fetch reservations:', err.message)
 			}
 
+			let jupyterImages = []
+			try {
+				jupyterImages = await jupyterImagesService.knex('jupyter_images as ji')
+					.where('status', 'published')
+					.orderBy('sort', 'asc')
+			} catch (err) {
+				console.error('Failed to fetch images:', err.message)
+			}
+
 			for (const profile of allowedProfiles) {
 				const choices = {}
-				for (const image of images) {
-					let mayUse = !image.groups
+				for (const jupyterImage of jupyterImages) {
+					let mayUse = req.accountability?.admin || !jupyterImage.groups
 					if (!mayUse) {
-						for (const group of image.groups) {
+						for (const group of jupyterImage.groups) {
 							mayUse = mayUse || userGroups.includes(group)
 						}
 					}
 					if (!mayUse) continue
-					const { key, display_name } = image
+					const { id: key, display_name, image, kitegg_init_container } = jupyterImage
 					choices[key] = {
 						display_name,
 						kubespawner_override: {}
@@ -108,11 +117,18 @@ export default {
 					if (profile.kubespawner_override?.extra_resource_limits) {
 						choices[key].kubespawner_override.extra_resource_limits = profile.kubespawner_override.extra_resource_limits
 					}
-					if (image.kubespawner_override?.image) {
-						choices[key].kubespawner_override.image = image.kubespawner_override.image
+					if (image) {
+						choices[key].kubespawner_override.image = image
 					}
-					if (Array.isArray(image.kubespawner_override?.init_containers)) {
-						choices[key].kubespawner_override.init_containers = image.kubespawner_override.init_containers
+					if (kitegg_init_container) {
+						if (!Array.isArray(choices[key].kubespawner_override.init_containers)) {
+							choices[key].kubespawner_override.init_containers = []
+						}
+						choices[key].kubespawner_override.init_containers.push({
+							image,
+							name: 'kitegg-init-container',
+							command: ['/opt/kitegg-base-image/init-container.sh']
+						})
 					}
 				}
 
