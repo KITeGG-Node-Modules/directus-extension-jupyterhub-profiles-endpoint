@@ -99,7 +99,7 @@ export default {
 			for (const profile of allowedProfiles) {
 				const choices = {}
 				for (const jupyterImage of jupyterImages) {
-					let mayUse = req.accountability?.admin || !jupyterImage.groups
+					let mayUse = req.accountability?.admin || !jupyterImage.groups || !jupyterImage.groups.length
 					if (!mayUse) {
 						for (const group of jupyterImage.groups) {
 							mayUse = mayUse || userGroups.includes(group)
