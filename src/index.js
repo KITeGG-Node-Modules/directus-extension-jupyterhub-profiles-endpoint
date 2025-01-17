@@ -78,7 +78,8 @@ export default {
 				for (const profileReservation of reservationsUser.concat(reservationsCourses)) {
 					const reservedProfile = profiles.find(profile => {
 						return profile.slug === profileReservation?.gpu ||
-							Array.isArray(profileReservation?.gpus) && profileReservation.gpus.includes(profile.slug)
+							Array.isArray(profileReservation?.gpus) && profileReservation.gpus.includes(profile.slug) ||
+							profileReservation?.gpus && profileReservation.gpus.indexOf(profile.slug) > -1
 					})
 					if (reservedProfile) {
 						if (!allowedProfiles.find(p => p.slug === reservedProfile.slug)) {
