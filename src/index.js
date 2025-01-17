@@ -54,7 +54,7 @@ export default {
 			try {
 				// FIXME: Optimise this SQL crap
 				const reservationsUser = await usersService.knex('gpu_reservations as gr')
-					.select('gr.gpu')
+					.select('gr.gpu,gr.gpus')
 					.innerJoin('gpu_reservations_directus_users as grdu',
 						'gr.id', '=', 'grdu.gpu_reservations_id')
 					.where('grdu.directus_users_id', user.id)
@@ -70,13 +70,16 @@ export default {
 					.innerJoin('courses_directus_users_2 as cdu', 'c.id', '=', 'cdu.courses_id')
 					.where('cdu.directus_users_id', user.id)
 				const reservationsCourses = await usersService.knex('gpu_reservations as gr')
-					.select('gr.gpu')
+					.select('gr.gpu,gr.gpus')
 					.whereIn('gr.course', courseIdsCollaborators.concat(courseIdsMembers).map(e => e.id))
 					.andWhere('gr.start', '<=', today)
 					.andWhere('gr.end', '>=', today)
 
 				for (const profileReservation of reservationsUser.concat(reservationsCourses)) {
-					const reservedProfile = profiles.find(profile => profile.slug === profileReservation?.gpu)
+					const reservedProfile = profiles.find(profile => {
+						return profile.slug === profileReservation?.gpu ||
+							Array.isArray(profileReservation?.gpus) && profileReservation.gpus.includes(profile.slug)
+					})
 					if (reservedProfile) {
 						if (!allowedProfiles.find(p => p.slug === reservedProfile.slug)) {
 							allowedProfiles.push(reservedProfile)
