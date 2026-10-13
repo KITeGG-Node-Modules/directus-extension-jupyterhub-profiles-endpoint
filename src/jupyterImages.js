@@ -11,13 +11,14 @@ export async function fetchPublishedImages(db) {
 }
 
 /**
- * Images the user may choose from: unrestricted images, images restricted to
- * a group the user belongs to, and everything for Directus admins.
+ * Images the user may choose from: unrestricted images and images restricted
+ * to a group the user belongs to. Visibility is decided purely by Keycloak
+ * group membership; Directus permissions play no role here.
  */
-export function filterVisibleImages(images, userGroups, isAdmin = false) {
+export function filterVisibleImages(images, userGroups) {
 	return (images ?? []).filter((image) => {
 		const groups = toStringArray(image.groups);
-		if (isAdmin || groups.length === 0) {
+		if (groups.length === 0) {
 			return true;
 		}
 		return groups.some((group) => userGroups.includes(group));

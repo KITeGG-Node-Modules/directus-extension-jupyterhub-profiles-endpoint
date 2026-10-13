@@ -15,8 +15,7 @@ export default {
 
 		router.get('/profiles', async (req, res) => {
 			try {
-				const isAdmin = req.accountability?.admin === true;
-				const { sub, groups } = await authenticate(req.headers);
+				const { sub, groups } = await authenticate(req.headers, logger);
 
 				const user = await findDirectusUser(db, sub);
 				if (!user) {
@@ -37,7 +36,7 @@ export default {
 				}
 
 				const eligibleSlugs = resolveEligibleSlugs(profiles, reservations);
-				const visibleImages = filterVisibleImages(images, groups, isAdmin);
+				const visibleImages = filterVisibleImages(images, groups);
 
 				res.json(buildProfileList(profiles, eligibleSlugs, visibleImages));
 			} catch (error) {

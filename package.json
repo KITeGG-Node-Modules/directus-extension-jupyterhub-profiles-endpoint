@@ -24,7 +24,7 @@
 		"@directus/extensions-sdk": "10.3.4"
 	},
 	"dependencies": {
-		"jwt-decode": "^4.0.0",
+		"jose": "^5.10.0",
 		"luxon": "^3.4.4"
 	}
 }
