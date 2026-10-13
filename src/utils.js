@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2024-2026 Mainz University of Applied Sciences
+// SPDX-License-Identifier: EUPL-1.2
 /**
  * Normalize a Directus field value that is expected to hold a list of
  * strings. Depending on the database driver and field type, such values can

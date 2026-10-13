@@ -2,7 +2,12 @@
 	"name": "directus-extension-jupyterhub-profiles-endpoint",
 	"description": "Directus endpoint serving per-user JupyterHub KubeSpawner profiles, authenticated via Keycloak tokens and authorized via GPU reservations.",
 	"icon": "extension",
-	"version": "1.0.0",
+	"version": "2.0.0",
+	"license": "EUPL-1.2",
+	"author": {
+		"name": "Mainz University of Applied Sciences",
+		"url": "https://www.hs-mainz.de"
+	},
 	"keywords": [
 		"directus",
 		"directus-extension",

@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2024-2026 Mainz University of Applied Sciences
+// SPDX-License-Identifier: EUPL-1.2
 import { createRemoteJWKSet, jwtVerify, errors as joseErrors } from 'jose';
 import { ApiError } from './errors.js';
 

@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2024-2026 Mainz University of Applied Sciences
+// SPDX-License-Identifier: EUPL-1.2
 import { authenticate } from './auth.js';
 import { ApiError, sendError } from './errors.js';
 import { fetchPublishedImages, filterVisibleImages } from './jupyterImages.js';

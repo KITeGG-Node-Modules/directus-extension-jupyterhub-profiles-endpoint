@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2024-2026 Mainz University of Applied Sciences
+// SPDX-License-Identifier: EUPL-1.2
 /**
  * An error that maps directly to an HTTP response.
  */

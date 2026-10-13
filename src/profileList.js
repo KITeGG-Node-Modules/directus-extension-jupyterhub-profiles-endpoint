@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2024-2026 Mainz University of Applied Sciences
+// SPDX-License-Identifier: EUPL-1.2
 import { IMAGE_OPTION_DISPLAY_NAME, INIT_CONTAINER_COMMAND, INIT_CONTAINER_NAME } from './constants.js';
 
 /**

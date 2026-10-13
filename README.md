@@ -130,3 +130,11 @@ and commit the updated `dist/` with it.
 Note: switching from `path: src/index.js` to `path: dist/index.js` means the
 host now loads the bundle; make sure `npm run build` runs once after installing
 dependencies when deploying from a source checkout.
+
+## License
+
+Copyright © 2024–2026 Mainz University of Applied Sciences.
+
+This extension is licensed under the [European Union Public Licence v1.2
+(EUPL-1.2)](./LICENSE); the full licence text is distributed in the `LICENSE`
+file, and source files carry SPDX headers.
