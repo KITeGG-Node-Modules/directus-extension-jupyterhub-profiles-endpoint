@@ -1,10 +1,11 @@
 import { DateTime } from 'luxon';
 
 /**
- * The date (YYYY-MM-DD) reservations are compared against.
+ * The date (YYYY-MM-DD) reservations are compared against, always in UTC so
+ * reservation windows do not shift with the container's timezone.
  */
 export function currentReservationDate() {
-	return DateTime.now().toFormat('yyyy-MM-dd');
+	return DateTime.utc().toFormat('yyyy-MM-dd');
 }
 
 async function fetchUserReservations(db, userId, today) {
