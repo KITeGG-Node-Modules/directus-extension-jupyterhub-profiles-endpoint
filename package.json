@@ -3,7 +3,6 @@
 	"description": "Directus endpoint serving per-user JupyterHub KubeSpawner profiles, authenticated via Keycloak tokens and authorized via GPU reservations.",
 	"icon": "extension",
 	"version": "1.0.0",
-	"private": true,
 	"keywords": [
 		"directus",
 		"directus-extension",
