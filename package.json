@@ -1,8 +1,9 @@
 {
 	"name": "directus-extension-jupyterhub-profiles-endpoint",
-	"description": "Please enter a description for your extension",
+	"description": "Directus endpoint serving per-user JupyterHub KubeSpawner profiles, authenticated via Keycloak tokens and authorized via GPU reservations.",
 	"icon": "extension",
 	"version": "1.0.0",
+	"private": true,
 	"keywords": [
 		"directus",
 		"directus-extension",
@@ -13,16 +14,20 @@
 		"type": "endpoint",
 		"path": "dist/index.js",
 		"source": "src/index.js",
-		"host": "^10.3.4"
+		"host": ">=10.3.4"
 	},
 	"scripts": {
 		"build": "directus-extension build",
 		"dev": "directus-extension build -w --no-minify",
 		"link": "directus-extension link",
-		"test": "node --test"
+		"test": "node --test",
+		"lint": "eslint ."
 	},
 	"devDependencies": {
-		"@directus/extensions-sdk": "10.3.4"
+		"@directus/extensions-sdk": "10.3.4",
+		"eslint": "^9.39.1",
+		"@eslint/js": "^9.39.1",
+		"globals": "^16.5.0"
 	},
 	"dependencies": {
 		"jose": "^5.10.0",
